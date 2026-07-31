@@ -1,0 +1,24 @@
+{
+  "default_server_config": {
+    "m.homeserver": {
+      "base_url": "https://matrix.example.com",
+      "server_name": "example.com"
+    }
+  },
+  "default_server_name": "example.com",
+  "brand": "Message Matrix",
+  "default_theme": "dark",
+  "disable_custom_urls": true,
+  "disable_guests": true,
+  "disable_3pid_login": true,
+  "show_labs_settings": true,
+  "features": {
+    "feature_pinning": "enable",
+    "feature_thread": "enable",
+    "feature_spaces": "enable"
+  },
+  "room_directory": {
+    "servers": ["example.com"]
+  },
+  "piwik": false
+}

@@ -1,0 +1,10 @@
+.env
+data/
+element/config.json
+synapse/homeserver.yaml
+synapse/signing.key
+synapse/*.log
+node_modules/
+dist/
+apps/inbox-desktop/src-tauri/target/
+.DS_Store

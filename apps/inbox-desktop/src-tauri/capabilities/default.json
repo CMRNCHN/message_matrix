@@ -1,0 +1,9 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "identifier": "com.messagematrix.inbox",
+  "permissions": [
+    "core:default",
+    "store:default",
+    "notification:default"
+  ]
+}

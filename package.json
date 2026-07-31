@@ -1,0 +1,14 @@
+{
+  "name": "message-matrix",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter @message-matrix/inbox-web dev",
+    "dev:desktop": "pnpm --filter @message-matrix/inbox-desktop dev",
+    "build": "pnpm -r build",
+    "build:web": "pnpm --filter @message-matrix/inbox-web build",
+    "build:desktop": "pnpm --filter @message-matrix/inbox-desktop build"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

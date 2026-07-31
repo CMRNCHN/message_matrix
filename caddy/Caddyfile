@@ -1,0 +1,38 @@
+{
+	# Use "internal" for LAN-only TLS (trust Caddy root on clients),
+	# or remove this block and set CADDY_ACME_EMAIL for public Let's Encrypt certs.
+	{$CADDY_TLS_MODE:internal}
+	email {$CADDY_ACME_EMAIL}
+}
+
+# Element Web client (legacy / advanced)
+{$ELEMENT_PUBLIC_HOST} {
+	reverse_proxy element:80
+}
+
+# Message Matrix unified inbox
+{$INBOX_PUBLIC_HOST} {
+	reverse_proxy inbox-web:80
+}
+
+# Synapse client API + .well-known
+{$SYNAPSE_PUBLIC_HOST} {
+	# Matrix client discovery
+	handle /.well-known/matrix/client {
+		header Content-Type application/json
+		respond `{"m.homeserver":{"base_url":"https://{$SYNAPSE_PUBLIC_HOST}"}}` 200
+	}
+
+	# Matrix server discovery (federation)
+	handle /.well-known/matrix/server {
+		header Content-Type application/json
+		respond `{"m.server":"{$SYNAPSE_PUBLIC_HOST}:8448"}` 200
+	}
+
+	reverse_proxy synapse:8008
+}
+
+# Synapse federation (optional — disable inbound federation in homeserver.yaml if private)
+{$SYNAPSE_PUBLIC_HOST}:8448 {
+	reverse_proxy synapse:8008
+}

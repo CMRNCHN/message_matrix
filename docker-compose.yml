@@ -1,0 +1,208 @@
+# Message Matrix — self-hosted Synapse + Element + mautrix bridges
+# Bootstrap: cp .env.example .env && ./scripts/bootstrap.sh
+# Connections: ./connect
+
+name: message-matrix
+
+networks:
+  matrix:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  caddy_data:
+  caddy_config:
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    networks: [matrix]
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: synapse
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: synapse
+      POSTGRES_INITDB_ARGS: --encoding=UTF8 --locale=C
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U synapse -d synapse"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  synapse:
+    image: matrixdotorg/synapse:latest
+    restart: unless-stopped
+    networks: [matrix]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./synapse:/data
+      - ./bridges:/data/bridges:ro
+    environment:
+      SYNAPSE_CONFIG_PATH: /data/homeserver.yaml
+    healthcheck:
+      test: ["CMD", "curl", "-fSs", "http://localhost:8008/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  element:
+    image: ghcr.io/element-hq/element-web:latest
+    restart: unless-stopped
+    networks: [matrix]
+    volumes:
+      - ./element/config.json:/app/config.json:ro
+
+  inbox-web:
+    build:
+      context: .
+      dockerfile: apps/inbox-web/Dockerfile
+    restart: unless-stopped
+    networks: [matrix]
+    environment:
+      INBOX_HOMESERVER_URL: ${SYNAPSE_PUBLIC_URL}
+      INBOX_SERVER_NAME: ${MATRIX_SERVER_NAME}
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    networks: [matrix]
+    ports:
+      - "443:443"
+      - "8448:8448"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      MATRIX_DOMAIN: ${MATRIX_DOMAIN}
+      ELEMENT_PUBLIC_HOST: ${ELEMENT_PUBLIC_URL#https://}
+      INBOX_PUBLIC_HOST: ${INBOX_PUBLIC_URL#https://}
+      SYNAPSE_PUBLIC_HOST: ${SYNAPSE_PUBLIC_URL#https://}
+      CADDY_ACME_EMAIL: ${CADDY_ACME_EMAIL:-}
+      CADDY_TLS_MODE: ${CADDY_TLS_MODE:-internal}
+    depends_on:
+      synapse:
+        condition: service_healthy
+      element:
+        condition: service_started
+      inbox-web:
+        condition: service_started
+
+  # ── Bridges — use ./connect wizard or: docker compose --profile bridges up -d ─
+
+  mautrix-signal:
+    profiles: [bridges]
+    image: dock.mau.dev/mautrix/signal:latest
+    restart: unless-stopped
+    networks: [matrix]
+    depends_on:
+      synapse:
+        condition: service_healthy
+    volumes:
+      - ./bridges/signal:/data
+
+  mautrix-telegram:
+    profiles: [bridges]
+    image: dock.mau.dev/mautrix/telegram:latest
+    restart: unless-stopped
+    networks: [matrix]
+    depends_on:
+      synapse:
+        condition: service_healthy
+    volumes:
+      - ./bridges/telegram:/data
+
+  mautrix-whatsapp:
+    profiles: [bridges]
+    image: dock.mau.dev/mautrix/whatsapp:latest
+    restart: unless-stopped
+    networks: [matrix]
+    depends_on:
+      synapse:
+        condition: service_healthy
+    volumes:
+      - ./bridges/whatsapp:/data
+
+  mautrix-imessage:
+    profiles: [bridges]
+    image: dock.mau.dev/mautrix/imessage:latest
+    restart: unless-stopped
+    networks: [matrix]
+    depends_on:
+      synapse:
+        condition: service_healthy
+    volumes:
+      - ./bridges/imessage:/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  mautrix-gvoice:
+    profiles: [bridges]
+    image: dock.mau.dev/mautrix/gvoice:latest
+    restart: unless-stopped
+    networks: [matrix]
+    depends_on:
+      synapse:
+        condition: service_healthy
+    volumes:
+      - ./bridges/gvoice:/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  mautrix-gmessages:
+    profiles: [bridges]
+    image: dock.mau.dev/mautrix/gmessages:latest
+    restart: unless-stopped
+    networks: [matrix]
+    depends_on:
+      synapse:
+        condition: service_healthy
+    volumes:
+      - ./bridges/gmessages:/data
+
+  mautrix-discord:
+    profiles: [bridges]
+    image: dock.mau.dev/mautrix/discord:latest
+    restart: unless-stopped
+    networks: [matrix]
+    depends_on:
+      synapse:
+        condition: service_healthy
+    volumes:
+      - ./bridges/discord:/data
+
+  mautrix-slack:
+    profiles: [bridges]
+    image: dock.mau.dev/mautrix/slack:latest
+    restart: unless-stopped
+    networks: [matrix]
+    depends_on:
+      synapse:
+        condition: service_healthy
+    volumes:
+      - ./bridges/slack:/data
+
+  mautrix-meta:
+    profiles: [bridges]
+    image: dock.mau.dev/mautrix/meta:latest
+    restart: unless-stopped
+    networks: [matrix]
+    depends_on:
+      synapse:
+        condition: service_healthy
+    volumes:
+      - ./bridges/meta:/data
+
+  # Experimental — enable via ./connect snapchat when upstream is ready
+  # mautrix-snapchat:
+  #   profiles: [bridges, experimental]
+  #   build: ./bridges/_placeholders/snapchat
+  #   restart: unless-stopped
+  #   networks: [matrix]
+  #   volumes:
+  #     - ./bridges/snapchat:/data

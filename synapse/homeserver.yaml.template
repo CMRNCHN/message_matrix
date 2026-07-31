@@ -1,0 +1,55 @@
+# Synapse homeserver configuration (rendered from template by scripts/bootstrap.sh)
+# Docs: https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html
+
+server_name: "${MATRIX_SERVER_NAME}"
+pid_file: /data/homeserver.pid
+public_baseurl: "${SYNAPSE_PUBLIC_URL}/"
+web_client_location: "${ELEMENT_PUBLIC_URL}/"
+
+report_stats: false
+enable_registration: false
+registration_shared_secret: "${SYNAPSE_REGISTRATION_SHARED_SECRET}"
+suppress_key_server_warning: true
+
+listeners:
+  - port: 8008
+    tls: false
+    type: http
+    x_forwarded: true
+    bind_addresses: ["0.0.0.0"]
+    resources:
+      - names: [client, federation]
+        compress: false
+
+database:
+  name: psycopg2
+  args:
+    user: synapse
+    password: "${POSTGRES_PASSWORD}"
+    database: synapse
+    host: postgres
+    cp_min: 5
+    cp_max: 10
+
+log_config: /data/log.config
+media_store_path: /data/media_store
+uploads_path: /data/uploads
+max_upload_size: 100M
+url_preview_enabled: false
+
+allow_public_rooms_without_auth: false
+allow_public_rooms_over_federation: false
+
+${FEDERATION_BLOCK}
+
+__APP_SERVICE_CONFIG_FILES__
+
+rc_message:
+  per_second: 0.5
+  burst_count: 30
+
+rc_registration:
+  per_second: 0.17
+  burst_count: 3
+
+signing_key_path: /data/signing.key
