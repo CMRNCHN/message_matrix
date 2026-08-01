@@ -24,6 +24,38 @@ set +a
 : "${SYNAPSE_ADMIN_USER:?}"
 : "${SYNAPSE_ADMIN_PASSWORD:?}"
 
+strip_url_host() {
+  local u="$1"
+  u="${u#https://}"
+  u="${u#http://}"
+  echo "$u"
+}
+
+set_env_var() {
+  local key="$1" value="$2"
+  if grep -q "^${key}=" .env 2>/dev/null; then
+    if [[ "$(uname)" == Darwin ]]; then
+      sed -i '' "s|^${key}=.*|${key}=${value}|" .env
+    else
+      sed -i "s|^${key}=.*|${key}=${value}|" .env
+    fi
+  else
+    echo "${key}=${value}" >> .env
+  fi
+}
+
+# Docker Compose cannot use bash ${VAR#https://}; keep hostnames in .env
+SYNAPSE_PUBLIC_HOST="$(strip_url_host "$SYNAPSE_PUBLIC_URL")"
+ELEMENT_PUBLIC_HOST="$(strip_url_host "$ELEMENT_PUBLIC_URL")"
+INBOX_PUBLIC_HOST="$(strip_url_host "${INBOX_PUBLIC_URL:-https://app.${MATRIX_DOMAIN}}")"
+set_env_var SYNAPSE_PUBLIC_HOST "$SYNAPSE_PUBLIC_HOST"
+set_env_var ELEMENT_PUBLIC_HOST "$ELEMENT_PUBLIC_HOST"
+set_env_var INBOX_PUBLIC_HOST "$INBOX_PUBLIC_HOST"
+
+set -a
+source .env
+set +a
+
 echo "==> Message Matrix bootstrap"
 echo "    Server: ${MATRIX_SERVER_NAME}"
 echo "    Synapse: ${SYNAPSE_PUBLIC_URL}"
@@ -64,7 +96,7 @@ docker compose up -d postgres
 sleep 5
 
 echo "==> Starting core stack..."
-docker compose up -d synapse element caddy
+docker compose up -d synapse element inbox-web caddy
 
 echo "==> Waiting for Synapse..."
 for _ in $(seq 1 30); do

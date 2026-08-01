@@ -80,9 +80,9 @@ services:
       - caddy_config:/config
     environment:
       MATRIX_DOMAIN: ${MATRIX_DOMAIN}
-      ELEMENT_PUBLIC_HOST: ${ELEMENT_PUBLIC_URL#https://}
-      INBOX_PUBLIC_HOST: ${INBOX_PUBLIC_URL#https://}
-      SYNAPSE_PUBLIC_HOST: ${SYNAPSE_PUBLIC_URL#https://}
+      ELEMENT_PUBLIC_HOST: ${ELEMENT_PUBLIC_HOST:?set ELEMENT_PUBLIC_HOST in .env}
+      INBOX_PUBLIC_HOST: ${INBOX_PUBLIC_HOST:?set INBOX_PUBLIC_HOST in .env}
+      SYNAPSE_PUBLIC_HOST: ${SYNAPSE_PUBLIC_HOST:?set SYNAPSE_PUBLIC_HOST in .env}
       CADDY_ACME_EMAIL: ${CADDY_ACME_EMAIL:-}
       CADDY_TLS_MODE: ${CADDY_TLS_MODE:-internal}
     depends_on:

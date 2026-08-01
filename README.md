@@ -46,11 +46,14 @@ Custom Matrix client — **all messages in one three-panel inbox** (not a contro
 ### Development
 
 ```bash
-npx pnpm install          # from repo root
-pnpm dev                  # inbox web at http://localhost:5173
-cd apps/inbox-desktop && pnpm tauri dev   # Mac app (requires Rust)
-pnpm build:web            # production static build
+npm run install:all       # or: ./scripts/pnpm.sh install
+npm run dev               # inbox web at http://localhost:5173
+npm run dev:desktop       # Mac app (requires Rust)
+npm run build:web         # production static build
+npm run build:desktop     # Mac .app bundle
 ```
+
+Without npm scripts: `./scripts/pnpm.sh install`, `./scripts/pnpm.sh --filter @message-matrix/inbox-desktop tauri build`
 
 Monorepo layout: `packages/shared` (Matrix SDK, UI), `apps/inbox-web`, `apps/inbox-desktop`.
 

@@ -1,12 +1,14 @@
 {
   "name": "message-matrix",
   "private": true,
+  "packageManager": "pnpm@9.15.4",
   "scripts": {
-    "dev": "pnpm --filter @message-matrix/inbox-web dev",
-    "dev:desktop": "pnpm --filter @message-matrix/inbox-desktop dev",
-    "build": "pnpm -r build",
-    "build:web": "pnpm --filter @message-matrix/inbox-web build",
-    "build:desktop": "pnpm --filter @message-matrix/inbox-desktop build"
+    "dev": "npx --yes pnpm@9.15.4 --filter @message-matrix/inbox-web dev",
+    "dev:desktop": "npx --yes pnpm@9.15.4 --filter @message-matrix/inbox-desktop tauri dev",
+    "build": "npx --yes pnpm@9.15.4 -r build",
+    "build:web": "npx --yes pnpm@9.15.4 --filter @message-matrix/inbox-web build",
+    "build:desktop": "npx --yes pnpm@9.15.4 --filter @message-matrix/inbox-desktop tauri build",
+    "install:all": "npx --yes pnpm@9.15.4 install"
   },
   "engines": {
     "node": ">=20"
