@@ -1,8 +1,8 @@
 {
 	# LAN/dev: local_certs uses Caddy's internal CA (.local hostnames).
 	# Public: set CADDY_TLS_MODE=public in .env (bootstrap omits local_certs → Let's Encrypt).
-	local_certs
-	
+	__CADDY_TLS_DIRECTIVE__
+	__CADDY_EMAIL_LINE__
 }
 
 # Element Web client (legacy / advanced)

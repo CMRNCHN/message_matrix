@@ -52,5 +52,7 @@ envsubst '${MATRIX_SERVER_NAME} ${SYNAPSE_PUBLIC_URL} ${ELEMENT_PUBLIC_URL} ${PO
 rm -f synapse/homeserver.yaml.tmp
 
 count=0
-[[ -f "$BRIDGE_ENABLED_FILE" ]] && count=$(grep -cve '^$' "$BRIDGE_ENABLED_FILE" 2>/dev/null || echo 0)
+if [[ -f "$BRIDGE_ENABLED_FILE" ]]; then
+  count=$(grep -c '[^[:space:]]' "$BRIDGE_ENABLED_FILE" 2>/dev/null || true)
+fi
 echo "Rendered synapse/homeserver.yaml (${count} enabled bridges)"

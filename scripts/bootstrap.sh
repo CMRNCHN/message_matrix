@@ -73,23 +73,45 @@ mkdir -p synapse element bridges bridges/_placeholders
 touch bridges/.enabled
 
 ./scripts/render-synapse-config.sh
+./scripts/render-caddy-config.sh
 
 if [[ ! -f synapse/signing.key ]]; then
   echo "==> Generating Synapse signing key..."
   docker run --rm \
     -v "$ROOT/synapse:/data" \
-    matrixdotorg/synapse:latest generate \
-    --server-name "$MATRIX_SERVER_NAME" \
-    --config-path /data/homeserver.yaml \
-    --report-stats no
+    -e SYNAPSE_SERVER_NAME="$MATRIX_SERVER_NAME" \
+    -e SYNAPSE_REPORT_STATS=no \
+    matrixdotorg/synapse:latest generate
 
   ./scripts/render-synapse-config.sh
 fi
 
-sed \
-  -e "s|example.com|${MATRIX_SERVER_NAME}|g" \
-  -e "s|https://matrix.example.com|${SYNAPSE_PUBLIC_URL}|g" \
-  element/config.json.template > element/config.json
+cat > element/config.json <<EOF
+{
+  "default_server_config": {
+    "m.homeserver": {
+      "base_url": "${SYNAPSE_PUBLIC_URL}",
+      "server_name": "${MATRIX_SERVER_NAME}"
+    }
+  },
+  "default_server_name": "${MATRIX_SERVER_NAME}",
+  "brand": "Message Matrix",
+  "default_theme": "dark",
+  "disable_custom_urls": true,
+  "disable_guests": true,
+  "disable_3pid_login": true,
+  "show_labs_settings": true,
+  "features": {
+    "feature_pinning": "enable",
+    "feature_thread": "enable",
+    "feature_spaces": "enable"
+  },
+  "room_directory": {
+    "servers": ["${MATRIX_SERVER_NAME}"]
+  },
+  "piwik": false
+}
+EOF
 
 echo "==> Starting PostgreSQL..."
 docker compose up -d postgres
