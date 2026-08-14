@@ -3,6 +3,8 @@
   "private": true,
   "packageManager": "pnpm@9.15.4",
   "scripts": {
+    "start": "./start",
+    "stop": "./stop",
     "dev": "npx --yes pnpm@9.15.4 --filter @message-matrix/inbox-web dev",
     "dev:desktop": "npx --yes pnpm@9.15.4 --filter @message-matrix/inbox-desktop tauri dev",
     "build": "npx --yes pnpm@9.15.4 -r build",

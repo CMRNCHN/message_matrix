@@ -1,0 +1,32 @@
+{"level":"info","name":"mautrix-signal","version":"v26.07+dev.6e57bf39","built_at":"2026-07-23T13:46:40Z","go_version":"go1.26.5","time":"2026-08-11T04:53:53.970517632Z","message":"Initializing bridge"}
+{"level":"debug","time":"2026-08-11T04:53:53.972208673Z","message":"Initializing database connection"}
+{"level":"debug","time":"2026-08-11T04:53:53.973795382Z","message":"Bridge built with end-to-bridge encryption, but disabled in config"}
+{"level":"info","time":"2026-08-11T04:53:53.974118632Z","message":"Starting bridge"}
+{"level":"info","db_section":"main","current_version":29,"oldest_compatible_version":9,"latest_known_version":29,"time":"2026-08-11T04:53:54.004365673Z","message":"Database is up to date"}
+{"level":"info","time":"2026-08-11T04:53:54.005044257Z","message":"Starting Matrix connector"}
+{"level":"info","db_section":"matrix_state","current_version":11,"oldest_compatible_version":3,"latest_known_version":11,"time":"2026-08-11T04:53:54.00573434Z","message":"Database is up to date"}
+{"level":"debug","time":"2026-08-11T04:53:54.005898548Z","message":"Starting appservice HTTP server"}
+{"level":"debug","time":"2026-08-11T04:53:54.00602959Z","message":"Checking connection to homeserver"}
+{"level":"info","address":"0.0.0.0:29328","time":"2026-08-11T04:53:54.006742132Z","message":"Starting HTTP listener"}
+{"level":"warn","req_id":1,"error":"Get \"http://synapse:8008/_matrix/client/versions?user_id=%40signalbot%3Amatrix.local\": dial tcp 192.168.97.2:8008: connect: connection refused","method":"GET","url":"http://synapse:8008/_matrix/client/versions?user_id=%40signalbot%3Amatrix.local","retry_in_seconds":4,"time":"2026-08-11T04:53:54.039580298Z","message":"Request failed, retrying"}
+{"level":"warn","req_id":1,"error":"Get \"http://synapse:8008/_matrix/client/versions?user_id=%40signalbot%3Amatrix.local\": dial tcp 192.168.97.2:8008: connect: connection refused","method":"GET","url":"http://synapse:8008/_matrix/client/versions?user_id=%40signalbot%3Amatrix.local","retry_in_seconds":8,"time":"2026-08-11T04:53:58.04453555Z","message":"Request failed, retrying"}
+{"level":"debug","req_id":1,"method":"GET","url":"http://synapse:8008/_matrix/client/versions?user_id=%40signalbot%3Amatrix.local","duration":28.604917,"status_code":200,"response_length":1401,"response_mime":"application/json","time":"2026-08-11T04:54:06.081842388Z","message":"Request completed"}
+{"level":"debug","req_id":2,"method":"GET","url":"http://synapse:8008/_matrix/client/v3/account/whoami?user_id=%40signalbot%3Amatrix.local","duration":5.456667,"status_code":200,"response_length":54,"response_mime":"application/json","time":"2026-08-11T04:54:06.094100221Z","message":"Request completed"}
+{"level":"debug","txn_id":"mautrix-go_1786424046094428554_1","time":"2026-08-11T04:54:06.377730638Z","message":"Received ping from homeserver"}
+{"level":"debug","req_id":3,"method":"POST","url":"http://synapse:8008/_matrix/client/v1/appservice/signal/ping?user_id=%40signalbot%3Amatrix.local","duration":290.348,"status_code":200,"response_length":19,"response_mime":"application/json","req_body":{"transaction_id":"mautrix-go_1786424046094428554_1"},"time":"2026-08-11T04:54:06.385055304Z","message":"Request completed"}
+{"level":"debug","txn_id":"mautrix-go_1786424046094428554_1","duration_ms":285,"time":"2026-08-11T04:54:06.385369513Z","message":"Homeserver -> appservice connection works"}
+{"level":"info","time":"2026-08-11T04:54:06.386417638Z","message":"Starting network connector"}
+{"level":"info","db_section":"signalmeow","current_version":27,"oldest_compatible_version":13,"latest_known_version":27,"time":"2026-08-11T04:54:06.388012138Z","message":"Database is up to date"}
+{"level":"debug","time":"2026-08-11T04:54:06.386501721Z","message":"Updating bot profile"}
+{"level":"debug","component":"disappear loop","time":"2026-08-11T04:54:06.389071596Z","message":"Disappearing message loop starting"}
+{"level":"debug","req_id":4,"method":"GET","url":"http://synapse:8008/_matrix/client/v1/media/config?user_id=%40signalbot%3Amatrix.local","duration":4.556417,"status_code":200,"response_length":27,"response_mime":"application/json","time":"2026-08-11T04:54:06.390503804Z","message":"Request completed"}
+{"level":"info","time":"2026-08-11T04:54:06.395449388Z","message":"No user logins found"}
+{"level":"debug","bridge_state":{"state_event":"UNCONFIGURED","timestamp":1786424046,"ttl":21600,"source":"bridge"},"time":"2026-08-11T04:54:06.396122388Z","message":"Sent new global bridge state"}
+{"level":"info","time":"2026-08-11T04:54:06.397099263Z","message":"Bridge started"}
+{"level":"debug","req_id":5,"method":"GET","url":"http://synapse:8008/_matrix/client/v3/profile/@signalbot:matrix.local/avatar_url?user_id=%40signalbot%3Amatrix.local","duration":36.751375,"status_code":200,"response_length":59,"response_mime":"application/json","time":"2026-08-11T04:54:06.426161638Z","message":"Request completed"}
+{"level":"debug","req_id":6,"method":"GET","url":"http://synapse:8008/_matrix/client/v3/profile/@signalbot:matrix.local/displayname?user_id=%40signalbot%3Amatrix.local","duration":38.75525,"status_code":200,"response_length":35,"response_mime":"application/json","time":"2026-08-11T04:54:06.465306429Z","message":"Request completed"}
+{"level":"info","time":"2026-08-11T10:00:49.286676444Z","message":"Interrupt signal received from OS"}
+{"level":"info","time":"2026-08-11T10:00:49.338164777Z","message":"Shutting down bridge"}
+{"level":"debug","time":"2026-08-11T10:00:49.33871386Z","message":"HTTP listener stopped"}
+{"level":"debug","component":"disappear loop","time":"2026-08-11T10:00:49.338801402Z","message":"Disappearing message loop stopping"}
+{"level":"info","time":"2026-08-11T10:00:49.350257902Z","message":"Shutdown complete"}

@@ -1,0 +1,14 @@
+id: signal
+url: http://mautrix-signal:29328
+as_token: XhqS7BV0adikLKVjgO72ZooEcverJk1FHuwGDn8apvhgPwNip27iBY0pMAx3tJLb
+hs_token: L48ED8lt6rEAxT5kFrKQsM2lCqNjstjfxV0aHzATdA5o13YRVq5oQYik2el9dm7Q
+sender_localpart: FfhELYDm9z03jjKWZz91maPNixTQVbMb
+rate_limited: false
+namespaces:
+    users:
+        - regex: ^@signalbot:matrix\.local$
+          exclusive: true
+        - regex: ^@signal_.*:matrix\.local$
+          exclusive: true
+de.sorunome.msc2409.push_ephemeral: true
+receive_ephemeral: true

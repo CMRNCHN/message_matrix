@@ -7,6 +7,10 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
+# shellcheck disable=SC1091
+source scripts/lib/docker.sh
+ensure_docker
+
 if [[ ! -f .env ]]; then
   echo "Copy .env.example to .env and configure it first."
   exit 1

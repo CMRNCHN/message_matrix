@@ -150,10 +150,31 @@ flowchart TB
 
 - Docker Engine 24+ and Docker Compose v2
 - A domain (public) or local DNS (LAN-only)
+
+### Docker on macOS — use OrbStack
+
+Message Matrix runs on standard `docker` / `docker compose`. On macOS we recommend **[OrbStack](https://orbstack.dev)** over Docker Desktop or Colima: faster startup, reliable HTTPS port forwarding, and it can auto-start on login.
+
+```bash
+brew install --cask orbstack
+open -a OrbStack
+docker context use orbstack
+```
+
+OrbStack’s installer adds shell integration to `~/.zprofile`. If `docker` cannot connect:
+
+```bash
+open -a OrbStack          # or: orb start
+docker context use orbstack
+./scripts/bootstrap.sh
+```
+
+`bootstrap.sh` will try to start OrbStack automatically when the daemon is down. Switching from Colima? Run `colima stop` once so only one backend owns port 443.
+
 - For **Telegram**: API ID + hash from [my.telegram.org](https://my.telegram.org/apps)
 - For **iMessage**: a Mac (or macOS VM) running [BlueBubbles Server](https://docs.bluebubbles.app/)
 - For **Google Voice**: consumer accounts may need Electron headless — see `bridges/gvoice/README.md`
-- Optional: [yq](https://github.com/mikefarah/yq) for automated bridge config patching
+- [yq](https://github.com/mikefarah/yq) — required for `./connect` bridge config patching (`brew install yq`)
 
 ## Quick start
 
@@ -167,6 +188,16 @@ chmod +x scripts/*.sh connect
 ```
 
 Bootstrap starts the core stack only. Use **`./connect`** to add platforms one at a time (recommended) or run `./connect` → `[a]` to walk through all unconfigured bridges.
+
+## Daily use
+
+```bash
+./start                 # OrbStack + stack + bridges, then open inbox
+./start --element       # same, but open Element
+./stop                  # stop containers (OrbStack stays running)
+```
+
+On macOS you can also double-click **`Start Message Matrix.command`** in Finder.
 
 ## Bridge authentication
 

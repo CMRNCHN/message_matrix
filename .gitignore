@@ -4,6 +4,7 @@ element/config.json
 synapse/homeserver.yaml
 synapse/signing.key
 synapse/*.log
+synapse/homeserver.log.*
 node_modules/
 dist/
 apps/inbox-desktop/src-tauri/target/
